@@ -89,6 +89,9 @@ html{overflow-x:hidden}
 .album img.cur{opacity:1;transform:scale(1)}
 .cnt{font-size:13px;color:var(--muted);margin-top:10px}
 .nav{position:absolute;top:44%;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:var(--wine);font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);z-index:2}
+
+#music{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;width:46px;height:46px;border-radius:50%;border:0;background:var(--wine);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}
+#music.on{display:block}#music.spin{animation:sp 4s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -170,6 +173,9 @@ html{overflow-x:hidden}
     <p style="margin-top:28px;color:var(--wine);font-size:14px">Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!</p>
   </section>
 </div>
+
+<audio id="bgm" src="nhac.mp3" loop preload="auto"></audio>
+<button id="music" type="button" aria-label="Bật hoặc tắt nhạc">♪</button>
 
 <div id="modal">
   <div class="sheet">
@@ -280,6 +286,12 @@ document.querySelectorAll('.ribbon').forEach(r=>r.innerHTML=RIB);
 function flower(s,rot){let p='';for(let i=0;i<6;i++)p+='<ellipse cx="50" cy="26" rx="19" ry="27" transform="rotate('+(i*60+rot%30)+' 50 50)" fill="url(#pg)" opacity=".96"/>';return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 100 100"><defs><radialGradient id="pg" cx=".5" cy=".85" r=".9"><stop offset="0" stop-color="#3d0520"/><stop offset=".55" stop-color="#8d1445"/><stop offset="1" stop-color="#c24a78"/></radialGradient></defs>'+p+'<circle cx="50" cy="50" r="10" fill="#1a050e"/><g stroke="#1a050e" stroke-width="1.6">'+[0,45,90,135,180,225,270,315].map(a=>'<line x1="50" y1="50" x2="'+(50+17*Math.cos(a*Math.PI/180))+'" y2="'+(50+17*Math.sin(a*Math.PI/180))+'"/>').join('')+'</g></svg>'}
 document.querySelectorAll('.sec').forEach((s,i)=>{const d=document.createElement('div');d.className='fl';const right=i%2===0;d.style.cssText='top:'+(i%2?'30px':'10px')+';'+(right?'right':'left')+':-58px;transform:rotate('+(right?-20:25)+'deg);opacity:.92';d.innerHTML=flower(120,i*7);s.prepend(d)});
 const cv=document.querySelector('.envelope');['top:-38px;left:-40px','bottom:-40px;right:-40px'].forEach((st,i)=>{const d=document.createElement('div');d.className='fl';d.style.cssText=st+';transform:rotate('+(i?160:-15)+'deg)';d.innerHTML=flower(110,i*11);cv.parentNode.appendChild(d);d.style.position='absolute'});
+
+const bgm=document.getElementById('bgm'),mb=document.getElementById('music');
+function ui(){mb.classList.toggle('spin',!bgm.paused)}
+bgm.addEventListener('error',()=>mb.classList.remove('on'));
+document.getElementById('open').addEventListener('click',()=>{mb.classList.add('on');bgm.play().then(ui).catch(()=>{if(bgm.error||bgm.networkState===3)mb.classList.remove('on');ui()})});
+mb.onclick=()=>{bgm.paused?bgm.play().then(ui):(bgm.pause(),ui())};
 </script>
 </body>
 </html>
