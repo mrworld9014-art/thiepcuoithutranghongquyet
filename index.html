@@ -18,7 +18,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro'
 h2{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:var(--wine);margin:0 0 14px}
 .script{font-family:'Dancing Script','Playfair Display',cursive;font-weight:700;color:var(--wine)}
 .sec{padding:44px 0 8px;position:relative}
-.ribbon{margin:26px -22px 0;height:70px;line-height:0}.ribbon svg{width:100%;height:100%;display:block}
+.ribbon{margin:26px -22px 0;height:96px;line-height:0}.ribbon svg{width:100%;height:100%;display:block}
 /* cover */
 #cover{overflow:hidden;position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,var(--soft),var(--bg));transition:opacity .6s,visibility .6s;padding:20px}
 #cover.hide{opacity:0;visibility:hidden}
@@ -92,9 +92,25 @@ html{overflow-x:hidden}
 
 #music{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;width:46px;height:46px;border-radius:50%;border:0;background:var(--wine);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}
 #music.on{display:block}#music.spin{animation:sp 4s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+
+#auto{position:fixed;right:14px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:40;width:46px;height:46px;border-radius:50%;border:0;background:var(--card);color:var(--wine);font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
+#auto.on{display:block}#auto.run{background:var(--wine);color:#fff}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="pgA" cx=".5" cy="1" r="1.05"><stop offset="0" stop-color="#25050f"/><stop offset=".4" stop-color="#6f1038"/><stop offset=".8" stop-color="#7d1a47"/><stop offset="1" stop-color="#a23a68"/></radialGradient>
+<radialGradient id="pgB" cx=".5" cy="1" r="1.05"><stop offset="0" stop-color="#3b0719"/><stop offset=".45" stop-color="#6a1038"/><stop offset="1" stop-color="#b05078"/></radialGradient>
+<radialGradient id="ctr" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#2b0b18"/></radialGradient>
+<linearGradient id="rb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e08aab"/><stop offset=".35" stop-color="#a02357"/><stop offset=".7" stop-color="#6a0d35"/><stop offset="1" stop-color="#3e0620"/></linearGradient>
+<linearGradient id="rb2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e08aab"/><stop offset=".35" stop-color="#a02357"/><stop offset=".7" stop-color="#6a0d35"/><stop offset="1" stop-color="#3e0620"/></linearGradient>
+<linearGradient id="hm" x1="0" y1="0" x2="1" y2="0"><stop offset=".22" stop-color="#000"/><stop offset=".36" stop-color="#fff"/><stop offset=".64" stop-color="#fff"/><stop offset=".78" stop-color="#000"/></linearGradient>
+<mask id="rm" maskUnits="userSpaceOnUse" x="-20" y="-20" width="640" height="160"><rect x="-20" y="-20" width="640" height="160" fill="url(#hm)"/></mask>
+<filter id="rsh" x="-5%" y="-30%" width="110%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#3c0019" flood-opacity=".35"/></filter>
+<radialGradient id="hg" cx=".34" cy=".28" r=".85"><stop offset="0" stop-color="#e27aa0"/><stop offset=".5" stop-color="#9a1d50"/><stop offset="1" stop-color="#560726"/></radialGradient>
+<filter id="hsh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="3.5" flood-color="#5a0828" flood-opacity=".4"/></filter>
+<filter id="bl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter>
+<filter id="bl6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter></defs></svg>
 
 <div id="cover">
   <div class="envelope">
@@ -176,6 +192,8 @@ html{overflow-x:hidden}
 
 <audio id="bgm" src="nhac.mp3" loop preload="auto"></audio>
 <button id="music" type="button" aria-label="Bật hoặc tắt nhạc">♪</button>
+
+<button id="auto" type="button" aria-label="Tự động cuộn">⇩</button>
 
 <div id="modal">
   <div class="sheet">
@@ -280,18 +298,71 @@ function go(d){const n=Math.min(ALB.length-1,Math.max(0,curIdx()+d));al.children
 document.getElementById('prev').onclick=()=>go(-1);document.getElementById('next').onclick=()=>go(1);
 setTimeout(mark,300);
 // ruy băng satin
-const RIB='<svg viewBox="0 0 480 90" preserveAspectRatio="none"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#5a0828"/><stop offset=".3" stop-color="#b94a74"/><stop offset=".55" stop-color="#7a0f3a"/><stop offset=".8" stop-color="#c0577f"/><stop offset="1" stop-color="#5a0828"/></linearGradient></defs><path d="M0 28C70 -14 130 66 240 38S410 -6 480 26L480 56C410 26 330 78 240 70S70 24 0 58Z" fill="url(#rg)"/><path d="M0 34C70 -4 130 70 240 46S410 4 480 32" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"/></svg>';
+const RIB='<svg viewBox="0 0 600 120" preserveAspectRatio="none" style="overflow:visible"><g filter="url(#rsh)"><path id="rbd" d="M-10 44C90 -8 170 96 300 52S500 -6 610 42L610 84C500 38 420 114 300 98S90 48 -10 86Z" fill="url(#rb)"/><path d="M-10 44C90 -8 170 96 300 52S500 -6 610 42L610 84C500 38 420 114 300 98S90 48 -10 86Z" fill="url(#rb2)" mask="url(#rm)"/></g><path d="M-10 44C90 -8 170 96 300 52S500 -6 610 42" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2.2"/><path d="M-10 62C90 12 170 112 300 74S500 14 610 62" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="5"/><path d="M-10 -4C120 -30 200 30 300 12S520 -26 610 4" fill="none" stroke="#7a0f3a" stroke-opacity=".55" stroke-width="1.2"/><path d="M-10 4C110 -22 210 38 300 20S530 -18 610 12" fill="none" stroke="#7a0f3a" stroke-opacity=".35" stroke-width="1"/></svg>';
 document.querySelectorAll('.ribbon').forEach(r=>r.innerHTML=RIB);
 // hoa anh túc
 function flower(s,rot){let p='';for(let i=0;i<6;i++)p+='<ellipse cx="50" cy="26" rx="19" ry="27" transform="rotate('+(i*60+rot%30)+' 50 50)" fill="url(#pg)" opacity=".96"/>';return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 100 100"><defs><radialGradient id="pg" cx=".5" cy=".85" r=".9"><stop offset="0" stop-color="#3d0520"/><stop offset=".55" stop-color="#8d1445"/><stop offset="1" stop-color="#c24a78"/></radialGradient></defs>'+p+'<circle cx="50" cy="50" r="10" fill="#1a050e"/><g stroke="#1a050e" stroke-width="1.6">'+[0,45,90,135,180,225,270,315].map(a=>'<line x1="50" y1="50" x2="'+(50+17*Math.cos(a*Math.PI/180))+'" y2="'+(50+17*Math.sin(a*Math.PI/180))+'"/>').join('')+'</g></svg>'}
-document.querySelectorAll('.sec').forEach((s,i)=>{const d=document.createElement('div');d.className='fl';const right=i%2===0;d.style.cssText='top:'+(i%2?'30px':'10px')+';'+(right?'right':'left')+':-58px;transform:rotate('+(right?-20:25)+'deg);opacity:.92';d.innerHTML=flower(120,i*7);s.prepend(d)});
-const cv=document.querySelector('.envelope');['top:-38px;left:-40px','bottom:-40px;right:-40px'].forEach((st,i)=>{const d=document.createElement('div');d.className='fl';d.style.cssText=st+';transform:rotate('+(i?160:-15)+'deg)';d.innerHTML=flower(110,i*11);cv.parentNode.appendChild(d);d.style.position='absolute'});
+document.querySelectorAll('.sec').forEach((s,i)=>{const d=document.createElement('div');d.className='fl';const right=i%2===0;d.style.cssText='top:'+(i%2?'-96px':'-112px')+';'+(right?'right':'left')+':-108px;transform:rotate('+(right?-20:25)+'deg);opacity:1';d.innerHTML=flower3(190,i+1);s.prepend(d)});
+const cv=document.querySelector('.envelope');['top:-70px;left:-95px','bottom:-165px;right:-100px'].forEach((st,i)=>{const d=document.createElement('div');d.className='fl';d.style.cssText=st+';transform:rotate('+(i?160:-15)+'deg)';d.innerHTML=flower3(250,i+4);cv.parentNode.appendChild(d);d.style.position='absolute'});
 
 const bgm=document.getElementById('bgm'),mb=document.getElementById('music');
 function ui(){mb.classList.toggle('spin',!bgm.paused)}
 bgm.addEventListener('error',()=>mb.classList.remove('on'));
 document.getElementById('open').addEventListener('click',()=>{mb.classList.add('on');bgm.play().then(ui).catch(()=>{if(bgm.error||bgm.networkState===3)mb.classList.remove('on');ui()})});
 mb.onclick=()=>{bgm.paused?bgm.play().then(ui):(bgm.pause(),ui())};
+
+// tự động cuộn
+const ab=document.getElementById('auto'),SPEED=55;let auto=false,raf=0,pos=0,last=0;
+function step(t){if(!auto)return;if(document.getElementById('modal').classList.contains('open')){last=t;pos=window.scrollY;raf=requestAnimationFrame(step);return}
+ const dt=Math.min(.05,(t-last)/1000);last=t;pos+=SPEED*dt;const max=document.documentElement.scrollHeight-innerHeight;
+ if(pos>=max){window.scrollTo({top:max,behavior:'instant'});stopAuto();return}
+ window.scrollTo({top:pos,behavior:'instant'});raf=requestAnimationFrame(step)}
+function startAuto(){if(auto)return;auto=true;pos=window.scrollY;last=performance.now();ab.classList.add('run');raf=requestAnimationFrame(step)}
+function stopAuto(){auto=false;cancelAnimationFrame(raf);ab.classList.remove('run')}
+['touchstart','wheel','mousedown','keydown'].forEach(e=>addEventListener(e,ev=>{if(auto&&!ab.contains(ev.target))stopAuto()},{passive:true}));
+ab.onclick=()=>auto?stopAuto():startAuto();
+document.getElementById('open').addEventListener('click',()=>{ab.classList.add('on');setTimeout(startAuto,1500)});
+
+function rnd(s){s=Math.sin(s*127.1)*43758.5453;return s-Math.floor(s)}
+function flower2(w,seed){
+ let P='';
+ const ring=(n,sc,off,fill,op)=>{for(let i=0;i<n;i++){const a=off+i*360/n+(rnd(seed*13+i+off)-.5)*16,s=sc*(.9+rnd(seed*7+i+off)*.22);
+  P+='<g transform="translate(100,110) rotate('+a+') scale('+s+')"><path d="M0 0C-40 -16 -50 -80 -8 -98C6 -103 18 -101 24 -92C48 -68 38 -14 0 0Z" fill="'+fill+'" opacity="'+op+'"/><path d="M0 -8C-8 -30 -12 -56 -6 -88M0 -8C6 -32 14 -52 16 -82M-2 -8C-14 -26 -26 -46 -26 -66" stroke="#1e030c" stroke-opacity=".3" stroke-width="1.1" fill="none"/><path d="M-30 -62C-26 -82 -14 -92 -2 -94" stroke="#fff" stroke-opacity=".16" stroke-width="3" fill="none" stroke-linecap="round"/></g>'}};
+ ring(6,1,0,'url(#pgA)',1);ring(5,.8,32,'url(#pgB)',.96);
+ let S='';for(let i=0;i<28;i++){const a=i*360/28*Math.PI/180,l=15+rnd(seed*3+i)*9,x=100+Math.cos(a)*l,y=110+Math.sin(a)*l;
+  S+='<line x1="'+(100+Math.cos(a)*8)+'" y1="'+(110+Math.sin(a)*8)+'" x2="'+x+'" y2="'+y+'" stroke="#0f0207" stroke-width="1.3"/><circle cx="'+x+'" cy="'+y+'" r="2.3" fill="#0f0207"/>'}
+ const stem='<path d="M100 118C95 165 114 205 98 262" stroke="#1d2414" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M99 175C80 168 66 150 64 136C82 140 96 154 99 175Z" fill="#2a331c" opacity=".9"/>';
+ return '<svg width="'+w+'" height="'+(w*1.3)+'" viewBox="0 0 200 260" style="overflow:visible;filter:drop-shadow(0 7px 9px rgba(60,0,25,.28))">'+stem+P+'<circle cx="100" cy="110" r="13" fill="url(#ctr)"/>'+S+'</svg>'}
+const HEART='<svg viewBox="0 0 100 92" style="overflow:visible;width:100%;height:100%"><path d="M50 86C20 62 3 46 3 27C3 12 15 3 28 3C38 3 46 9 50 18C54 9 62 3 72 3C85 3 97 12 97 27C97 46 80 62 50 86Z" fill="url(#hg)" filter="url(#hsh)"/><path d="M24 22C28 13 38 11 45 18" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round" fill="none" filter="url(#bl)"/></svg>';
+(function(){const hc=document.querySelector('.heart');if(hc){hc.style.cssText='width:60px;height:56px;background:none;border-radius:0;margin:0 auto 12px;display:block';hc.innerHTML=HEART}
+ const on=document.querySelector('.grid .on');if(on){const t=on.textContent;on.style.cssText='background:none;position:relative;width:32px;height:30px;aspect-ratio:auto;border-radius:0;display:block;margin:0 auto';on.innerHTML='<span style="position:absolute;inset:0;display:block">'+HEART+'</span><b style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;color:#fff;font-size:13px;padding-bottom:2px">'+t+'</b>'}})();
+function flower3(w,seed){
+ const id='f'+(window.__fid=(window.__fid||0)+1);let n=0;const R=()=>rnd(seed*97+(++n)*3.17);
+ let defs='<linearGradient id="'+id+'s" x1="0" x2="1"><stop offset="0" stop-color="#6b6a3c"/><stop offset=".5" stop-color="#4a4a26"/><stop offset="1" stop-color="#25240f"/></linearGradient>';
+ const PAL={hi:['#c47aa2','#8a2459','#520a2e'],mid:['#a24a78','#6e1744','#42062a'],lo:['#74284f','#4c0e32','#25031a']};
+ let petals='';
+ function petal(a,sc,tone,k){
+  const j=()=>(R()-.5)*18,P=[-12,-8,-60+j(),-20+j(),-84+j(),-72+j(),-54+j(),-106+j(),-30+j(),-128+j(),24+j(),-132+j(),52+j(),-108+j(),86+j(),-80+j(),66+j(),-22+j(),12,-8];
+  const d='M'+P[0]+' '+P[1]+'C'+P.slice(2,8).join(' ')+'C'+P.slice(8,14).join(' ')+'C'+P.slice(14,20).join(' ')+'Z';
+  const c=PAL[tone],gid=id+'g'+k;
+  defs+='<radialGradient id="'+gid+'" gradientUnits="userSpaceOnUse" cx="0" cy="-8" r="130"><stop offset="0" stop-color="'+c[0]+'"/><stop offset=".5" stop-color="'+c[1]+'"/><stop offset="1" stop-color="'+c[2]+'"/></radialGradient><clipPath id="'+id+'c'+k+'"><path d="'+d+'"/></clipPath>';
+  let L='';
+  for(let m=0;m<26;m++){const ang=(-40+m*80/25+(R()-.5)*3)*Math.PI/180,len=100+R()*34,ex=Math.sin(ang)*len,ey=-Math.cos(ang)*len-6,
+   col=m%2?'rgba(255,205,228,.13)':'rgba(30,0,16,.17)';
+   L+='<path d="M'+(Math.sin(ang)*6)+' -10Q'+(ex*.5+(R()-.5)*8)+' '+(ey*.5)+' '+ex+' '+ey+'" stroke="'+col+'" stroke-width="'+(.7+R()*1.1)+'" fill="none"/>'}
+  petals+='<g transform="rotate('+a+') scale('+sc+')"><path d="'+d+'" fill="url(#'+gid+')"/><g clip-path="url(#'+id+'c'+k+')">'+L+'<ellipse cx="0" cy="-38" rx="26" ry="34" fill="rgba(255,190,218,.30)" filter="url(#bl6)"/></g><path d="'+d+'" fill="none" stroke="#24041a" stroke-opacity=".4" stroke-width="1.3"/></g>'};
+ const off=R()*72;
+ for(let i=0;i<5;i++)petal(off+i*72,1,'lo',i);
+ for(let i=0;i<5;i++)petal(off+36+i*72+(R()-.5)*10,.88,i%2?'mid':'hi',5+i);
+ let S='';const cols=['#190a0e','#2a1611','#110508','#3a2512','#22100f'];
+ for(let i=0;i<150;i++){const a=R()*Math.PI*2,r=24+R()*34,x=Math.cos(a)*r,y=Math.sin(a)*r,deg=a*180/Math.PI;
+  S+='<ellipse cx="'+x+'" cy="'+y+'" rx="'+(3+R()*2.4)+'" ry="'+(4.5+R()*3)+'" transform="rotate('+(deg+90)+' '+x+' '+y+')" fill="'+cols[i%5]+'"/>'}
+ for(let i=0;i<34;i++){const a=R()*Math.PI*2,r1=19,r2=32+R()*12;S+='<line x1="'+Math.cos(a)*r1+'" y1="'+Math.sin(a)*r1+'" x2="'+Math.cos(a)*r2+'" y2="'+Math.sin(a)*r2+'" stroke="#a07a34" stroke-width="1.3" stroke-opacity=".85"/>'}
+ defs+='<radialGradient id="'+id+'d" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#6a3446"/><stop offset=".5" stop-color="#2e0f1c"/><stop offset="1" stop-color="#120409"/></radialGradient>';
+ const dome='<circle r="24" fill="url(#'+id+'d)"/><ellipse cx="-7" cy="-8" rx="7" ry="4" fill="rgba(255,255,255,.22)" filter="url(#bl)"/>';
+ const stem='<path d="M150 165C145 235 178 310 160 414" stroke="url(#'+id+'s)" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M172 250C232 282 252 336 262 414" stroke="#8a1f55" stroke-width="1.5" fill="none" opacity=".85"/><path d="M178 256C240 292 258 340 270 414" stroke="#8a1f55" stroke-width="1.2" fill="none" opacity=".6"/>';
+ const rot=(R()-.5)*40;
+ return '<svg width="'+w+'" height="'+(w*1.4)+'" viewBox="0 0 300 420" style="overflow:visible;filter:drop-shadow(0 8px 10px rgba(50,0,25,.25))"><defs>'+defs+'</defs>'+stem+'<g transform="translate(150,150) rotate('+rot+') scale(1,.9)">'+petals+S+dome+'</g></svg>'}
 </script>
 </body>
 </html>
