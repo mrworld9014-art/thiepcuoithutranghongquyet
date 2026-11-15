@@ -100,6 +100,14 @@ html{overflow-x:hidden}
 .sl{position:absolute;top:22px;left:50%;border-radius:16px;overflow:hidden;box-shadow:0 14px 30px rgba(60,0,25,.3);backface-visibility:hidden;cursor:pointer;transition:transform .5s cubic-bezier(.3,.7,.3,1),opacity .5s,filter .5s}
 .sl img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .nav{z-index:20}
+.mapw{margin-top:16px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 22px rgba(60,0,25,.12);line-height:0}
+.mapw iframe{width:100%;height:270px;border:0;display:block}
+.wish{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;text-align:left;background:var(--card)}
+.wish .wn{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.wish b{color:var(--wine);font-family:'Playfair Display',Georgia,serif;font-size:14px}
+.wish small{color:var(--muted);font-size:11px;white-space:nowrap}
+.wish p{margin:4px 0 0;font-size:14px;word-break:break-word}
+.stat{margin-top:14px;font-size:14px;color:var(--muted)}.stat b{font-family:'Playfair Display',Georgia,serif;font-size:28px;color:var(--wine);margin-right:6px;vertical-align:-2px}
 </style>
 </head>
 <body>
@@ -171,6 +179,7 @@ html{overflow-x:hidden}
     </div>
     <a class="link" id="gcal" target="_blank" rel="noopener" href="#">Thêm vào lịch</a><br>
     <button class="btn" id="rsvpBtn">Xác nhận tham dự</button>
+    <div class="stat" id="rsvpStat" hidden></div>
   </section>
   <div class="ribbon"></div>
 
@@ -178,6 +187,17 @@ html{overflow-x:hidden}
     <h2>Tiệc cưới sẽ tổ chức tại</h2>
     <p class="venue"><b>Sảnh EROS, tầng 3</b><br>Trung tâm tiệc cưới Tân An<br>Số 22 đường Hồng Bàng, phường Hồng Bàng, Hải Phòng</p>
     <a class="btn alt" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Trung+T%C3%A2m+Ti%E1%BB%87c+C%C6%B0%E1%BB%9Bi+T%C3%A2n+An+22+H%E1%BB%93ng+B%C3%A0ng+H%E1%BA%A3i+Ph%C3%B2ng">Chỉ đường trên Google Maps</a>
+    <div class="mapw"><iframe title="Bản đồ tiệc cưới" src="https://www.google.com/maps?q=Trung+T%C3%A2m+Ti%E1%BB%87c+C%C6%B0%E1%BB%9Bi+T%C3%A2n+An+Palace+22+H%E1%BB%93ng+B%C3%A0ng+H%E1%BA%A3i+Ph%C3%B2ng&output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+  </section>
+  <div class="ribbon"></div>
+
+  <section class="sec" id="gb">
+    <h2>Sổ lưu bút</h2>
+    <input id="wName" placeholder="Nhập tên của bạn" autocomplete="name" style="margin-bottom:10px">
+    <textarea id="wText" rows="3" placeholder="Nhập lời chúc của bạn"></textarea>
+    <button class="btn full" id="wSend" type="button">Gửi lời chúc</button>
+    <div class="toast" id="wToast"></div>
+    <div id="wishes" style="margin-top:18px"></div>
   </section>
   <div class="ribbon"></div>
 
@@ -213,7 +233,7 @@ html{overflow-x:hidden}
     <textarea id="note" rows="2" placeholder="Chúc mừng hạnh phúc anh chị!"></textarea>
     <a class="btn full" id="zalo" target="_blank" rel="noopener" href="#">Gửi xác nhận qua Zalo</a>
     <a class="btn alt full" id="sms" href="#">Gửi bằng tin nhắn SMS</a>
-    <button class="btn alt full" id="copy" type="button">Sao chép lời xác nhận</button>
+    <button class="btn full" id="confirm" type="button">Xác nhận</button>
     <button class="btn alt full" id="close" type="button" style="border-color:var(--line);color:var(--muted)">Đóng</button>
     <div class="toast" id="toast"></div>
   </div>
@@ -273,7 +293,7 @@ async function copyText(t, el, ok){
   try { await navigator.clipboard.writeText(t); } catch(e){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(_){} ta.remove(); }
   el.style.display='block'; el.textContent=ok;
 }
-$('copy').onclick = () => copyText(msg(), $('toast'), 'Đã sao chép! Hãy dán và gửi cho gia chủ nhé.');
+
 $('zalo').addEventListener('click', () => copyText(msg(), $('toast'), 'Đã sao chép lời xác nhận, hãy dán vào Zalo và gửi nhé.'));
 $('copyAcc').onclick = () => copyText(CFG.account, $('toast2'), 'Đã sao chép số tài khoản.');
 $('rsvpBtn').onclick = () => $('modal').classList.add('open');
@@ -393,6 +413,51 @@ document.querySelectorAll('.ribbon').forEach((r,i)=>{const right=i%2===0,im=docu
 (function(){const hr=document.querySelector('.hero');if(!hr)return;[['C1','width:190px;top:-14px;right:-46px']].forEach(function(a){const im=document.createElement('img');im.className='fl';im.alt='';im.src=ASSET[a[0]];im.style.cssText=a[1];hr.insertBefore(im,hr.firstChild)})})();
 (function(){const cvr=document.getElementById('cover');
  [['C1','top:-30px;right:-36px;width:min(80vw,330px)'],['C7','bottom:-215px;left:0;width:170px']].forEach(function(a){const im=document.createElement('img');im.src=ASSET[a[0]];im.alt='';im.style.cssText='position:absolute;pointer-events:none;'+a[1];cvr.insertBefore(im,cvr.firstChild)})})();
+
+// ===== Sổ lưu bút & xác nhận tham dự =====
+const GB_URL='';   // DÁN URL ỨNG DỤNG WEB (Google Apps Script) VÀO ĐÂY để lời chúc và xác nhận lưu vào Google Sheets
+const LSK='thiep_loi_chuc';
+let wishes=[];
+function fmt(t){const d=new Date(t);return isNaN(d)?'':d.toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'})}
+function renderWishes(){const box=$('wishes');box.innerHTML='';
+ if(!wishes.length){const p=document.createElement('p');p.style.cssText='color:var(--muted);font-size:14px';p.textContent='Hãy là người đầu tiên gửi lời chúc nhé!';box.appendChild(p);return}
+ wishes.slice(0,50).forEach(w=>{const c=document.createElement('div');c.className='wish';const top=document.createElement('div');top.className='wn';
+  const b=document.createElement('b');b.textContent=w.name;const s=document.createElement('small');s.textContent=fmt(w.t);top.append(b,s);
+  const p=document.createElement('p');p.textContent=w.note;c.append(top,p);box.appendChild(c)})}
+let stat=null;
+function renderStat(){const el=$('rsvpStat');if(!GB_URL||!stat){el.hidden=true;return}el.hidden=false;el.textContent='';
+ if(stat.people>0){const b=document.createElement('b');b.textContent=stat.people;el.append(b,document.createTextNode('người đã xác nhận tham dự'))}
+ else el.textContent='Hãy là người đầu tiên xác nhận tham dự nhé!'}
+async function loadWishes(){
+ if(GB_URL){try{const r=await fetch(GB_URL);const a=await r.json();const L=Array.isArray(a)?a:(a.wishes||[]);
+   wishes=L.map(x=>({name:String(x.name||'Khách'),note:String(x.note||''),t:x.t}));
+   stat=(!Array.isArray(a)&&typeof a.people==='number')?{people:a.people}:null}catch(e){}}
+ else{try{wishes=JSON.parse(localStorage.getItem(LSK)||'[]')}catch(e){wishes=[]}}
+ renderWishes();renderStat()}
+async function sendData(d){
+ const w={name:d.name,note:d.note,t:new Date().toISOString()};
+ if(GB_URL){try{await fetch(GB_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)})}catch(e){return false}}
+ else{try{const a=JSON.parse(localStorage.getItem(LSK)||'[]');a.unshift(w);localStorage.setItem(LSK,JSON.stringify(a.slice(0,50)))}catch(e){}}
+ if(d.note){wishes.unshift(w);renderWishes()}
+ if(GB_URL){if(d.attend==='Có'&&stat){stat.people+=Number(d.count)||1;renderStat()}setTimeout(loadWishes,1500)}
+ return true}
+function say(el,t){el.style.display='block';el.textContent=t}
+$('confirm').onclick=async()=>{
+ const name=$('guest').value.trim();if(!name){say($('toast'),'Vui lòng nhập tên của bạn nhé.');$('guest').focus();return}
+ const b=$('confirm');b.disabled=true;b.textContent='Đang gửi…';
+ const ok=await sendData({name,attend:attend?'Có':'Không',count:attend?$('count').value:0,note:$('note').value.trim()});
+ b.disabled=false;b.textContent='Xác nhận';
+ if(ok){say($('toast'),attend?'Cảm ơn bạn! Gia đình đã nhận được xác nhận tham dự.':'Cảm ơn bạn đã cho biết. Rất tiếc không được gặp bạn hôm đó.');$('note').value='';
+  setTimeout(()=>{$('modal').classList.remove('open');$('toast').style.display='none';const g=document.getElementById('gb');if(g)g.scrollIntoView({behavior:'smooth'})},1500)}
+ else say($('toast'),'Chưa gửi được, bạn thử lại nhé.')};
+$('wSend').onclick=async()=>{
+ const name=$('wName').value.trim(),note=$('wText').value.trim();
+ if(!name||!note){say($('wToast'),'Bạn nhập tên và lời chúc giúp mình nhé.');return}
+ const b=$('wSend');b.disabled=true;b.textContent='Đang gửi…';
+ const ok=await sendData({name,attend:'',count:'',note});
+ b.disabled=false;b.textContent='Gửi lời chúc';
+ if(ok){$('wText').value='';say($('wToast'),'Cảm ơn lời chúc của bạn!')}else say($('wToast'),'Chưa gửi được, bạn thử lại nhé.')};
+loadWishes();
 </script>
 </body>
 </html>
