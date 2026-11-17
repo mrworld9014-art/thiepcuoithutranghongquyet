@@ -425,17 +425,21 @@ function renderWishes(){const box=$('wishes');box.innerHTML='';
  wishes.slice(0,50).forEach(w=>{const c=document.createElement('div');c.className='wish';const top=document.createElement('div');top.className='wn';
   const b=document.createElement('b');b.textContent=w.name;const s=document.createElement('small');s.textContent=fmt(w.t);top.append(b,s);
   const p=document.createElement('p');p.textContent=w.note;c.append(top,p);box.appendChild(c)})}
-let stat=null;
+let stat=null,sideBad=false;
 function renderStat(){const el=$('rsvpStat');if(!GB_URL||!stat){el.hidden=true;return}el.hidden=false;el.textContent='';
  if(stat.people>0){const b=document.createElement('b');b.textContent=stat.people;el.append(b,document.createTextNode('người đã xác nhận tham dự'))}
  else el.textContent='Hãy là người đầu tiên xác nhận tham dự nhé!'}
 async function loadWishes(){
- if(GB_URL){try{const r=await fetch(GB_URL+(GB_SIDE?('?side='+GB_SIDE):''));const a=await r.json();const L=Array.isArray(a)?a:(a.wishes||[]);
+ if(GB_URL){try{const r=await fetch(GB_URL+(GB_SIDE?('?side='+GB_SIDE):''));const a=await r.json();sideBad=!!GB_SIDE&&(Array.isArray(a)||a.side!==GB_SIDE);const L=sideBad?[]:(Array.isArray(a)?a:(a.wishes||[]));
    wishes=L.map(x=>({name:String(x.name||'Khách'),note:String(x.note||''),t:x.t}));
-   stat=(!Array.isArray(a)&&typeof a.people==='number')?{people:a.people}:null}catch(e){}}
+   stat=(!sideBad&&!Array.isArray(a)&&typeof a.people==='number')?{people:a.people}:null}catch(e){}}
  else{try{wishes=JSON.parse(localStorage.getItem(LSK)||'[]')}catch(e){wishes=[]}}
- renderWishes();renderStat()}
+ renderWishes();renderStat();warnSide()}
+function warnSide(){let el=document.getElementById('sideWarn');if(!sideBad){if(el)el.remove();return}
+ if(!el){el=document.createElement('p');el.id='sideWarn';el.style.cssText='color:#b91c1c;background:#fef2f2;border:1px dashed #ef4444;border-radius:10px;padding:8px 10px;font-size:12px;margin:12px 0 0;text-align:left';const w=$('wishes');w.parentNode.insertBefore(el,w)}
+ el.textContent='Hệ thống nhận xác nhận của nhà trai chưa sẵn sàng (cần cập nhật mã Google Apps Script), nên tạm thời chưa gửi được.'}
 async function sendData(d){
+ if(sideBad)return false;
  const w={name:d.name,note:d.note,t:new Date().toISOString()};
  if(GB_URL){try{await fetch(GB_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({side:GB_SIDE},d))})}catch(e){return false}}
  else{try{const a=JSON.parse(localStorage.getItem(LSK)||'[]');a.unshift(w);localStorage.setItem(LSK,JSON.stringify(a.slice(0,50)))}catch(e){}}
