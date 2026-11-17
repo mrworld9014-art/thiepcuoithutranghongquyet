@@ -416,7 +416,7 @@ document.querySelectorAll('.ribbon').forEach((r,i)=>{const right=i%2===0,im=docu
 
 // ===== Sổ lưu bút & xác nhận tham dự =====
 const GB_SIDE='trai';   // nhà trai: lưu vào trang tính riêng 'Nha trai'
-const GB_URL='https://script.google.com/macros/s/AKfycbxpwpDTaZmNdhBXMmUmTe4t8VMVryfx4dQGoQbG2-mb9kLaTokYfvlbq_MgtEYlCkg/exec';   // DÁN URL ỨNG DỤNG WEB (Google Apps Script) VÀO ĐÂY để lời chúc và xác nhận lưu vào Google Sheets
+const GB_URL='https://script.google.com/macros/s/AKfycbx-VZb_PbGOuBiyCuTbS28C-Sawc8AtDDZxkCn3koeIGXfoplS531XJi3GYVnN6Cg/exec';   // DÁN URL ỨNG DỤNG WEB (Google Apps Script) VÀO ĐÂY để lời chúc và xác nhận lưu vào Google Sheets
 const LSK='thiep_loi_chuc_nha_trai';
 let wishes=[];
 function fmt(t){const d=new Date(t);return isNaN(d)?'':d.toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'})}
