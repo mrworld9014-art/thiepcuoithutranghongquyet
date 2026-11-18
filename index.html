@@ -415,7 +415,7 @@ document.querySelectorAll('.ribbon').forEach((r,i)=>{const right=i%2===0,im=docu
  [['C1','top:-30px;right:-36px;width:min(80vw,330px)'],['C7','bottom:-215px;left:0;width:170px']].forEach(function(a){const im=document.createElement('img');im.src=ASSET[a[0]];im.alt='';im.style.cssText='position:absolute;pointer-events:none;'+a[1];cvr.insertBefore(im,cvr.firstChild)})})();
 
 // ===== Sổ lưu bút & xác nhận tham dự =====
-const GB_URL='https://script.google.com/macros/s/AKfycbx-VZb_PbGOuBiyCuTbS28C-Sawc8AtDDZxkCn3koeIGXfoplS531XJi3GYVnN6Cg/exec';   // DÁN URL ỨNG DỤNG WEB (Google Apps Script) VÀO ĐÂY để lời chúc và xác nhận lưu vào Google Sheets
+const GB_URL='https://script.google.com/macros/s/AKfycbwtpX4FH9h_E5wdf5_0idPG7YSPbjngc_oXn0Bk-J6o75yBlXHOeryOyE79JvsaNw/exec';   // DÁN URL ỨNG DỤNG WEB (Google Apps Script) VÀO ĐÂY để lời chúc và xác nhận lưu vào Google Sheets
 const LSK='thiep_loi_chuc';
 let wishes=[];
 function fmt(t){const d=new Date(t);return isNaN(d)?'':d.toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'})}
